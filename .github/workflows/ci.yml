@@ -13,7 +13,13 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '22'
+  # 与 .nvmrc、Dockerfile 的 ARG NODE_IMAGE 保持一致。
+  # 三处都是 24：engines 里的 >=22 只是最低门槛，实际开发与构建统一跑 24。
+  NODE_VERSION: '24'
+  # 与 Dockerfile 里的 ARG PNPM_VERSION 保持一致。
+  # pnpm/action-setup 不会自动推断版本（package.json 里刻意不放
+  # packageManager 字段，否则 pnpm 会把自己写进 lockfile），必须显式指定。
+  PNPM_VERSION: '12.9.1'
 
 jobs:
   # ---------------------------------------------------------------------------
@@ -31,6 +37,8 @@ jobs:
 
       - name: 安装 pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
 
       - name: 安装 Node.js
         uses: actions/setup-node@v4
