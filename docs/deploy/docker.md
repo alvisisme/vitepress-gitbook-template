@@ -217,11 +217,15 @@ docker images vitepress-gitbook-template
 
 ```bash
 docker build \
-  --build-arg NODE_IMAGE=node:22-alpine \
+  --build-arg NODE_IMAGE=node:24-alpine \
   --build-arg NGINX_IMAGE=nginx:1.27-alpine \
   --build-arg PNPM_VERSION=12.9.1 \
   -t docs-site:latest .
 ```
+
+::: tip 版本要保持一致
+`.nvmrc`、`Dockerfile` 的 `NODE_IMAGE`、`.github/workflows/ci.yml` 的 `NODE_VERSION` 三处应当指向同一个 Node 大版本，否则「本地能构建、CI 挂了」这类问题会很难查。
+:::
 
 ::: danger 换 pnpm 版本要同步更新锁文件
 `pnpm-lock.yaml` 的 `lockfileVersion` 和 pnpm 大版本绑定。如果构建时用了不同大版本的 pnpm，`--frozen-lockfile` 会直接失败。换版本后请在本地重新执行一次 `pnpm install` 并提交锁文件。

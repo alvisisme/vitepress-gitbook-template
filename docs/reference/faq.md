@@ -22,7 +22,8 @@ nvm use 24
 
 1. `Dockerfile` 里用的是 pnpm，需要同步改成 `npm ci`；
 2. 生成并提交 `package-lock.json` 或 `yarn.lock`；
-3. `package.json` 的 `packageManager` 字段删掉。
+3. `.github/workflows/ci.yml` 里要删掉 `pnpm/action-setup` 那一步，换成 `actions/setup-node` 的 `cache: npm`；
+4. 本项目**没有**用 `packageManager` 字段（见「安装 pnpm」一节的说明），所以换成别的包管理器不需要额外清理。
 :::
 
 ::: details 安装很慢 / 卡住

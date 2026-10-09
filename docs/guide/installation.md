@@ -7,21 +7,23 @@ description: Node.js 与 pnpm 的版本要求，以及安装、开发、构建�
 
 ## 版本要求
 
-| 工具 | 最低版本 | 推荐版本 | 说明 |
+| 工具 | 最低版本 | 工程锁定版本 | 说明 |
 | --- | --- | --- | --- |
-| Node.js | 22.0.0 | 24.x LTS | VitePress 1.x 要求 Node 18+，本模板按 22+ 校验 |
-| pnpm | 9.0.0 | 10.x / 12.x | 也可用 npm / yarn，但锁文件与 Dockerfile 按 pnpm 编写 |
+| Node.js | 22.0.0 | **24** | VitePress 1.x 要求 Node 18+；`.nvmrc`、`Dockerfile`、CI 三处统一为 24 |
+| pnpm | 9.0.0 | **12.9.1** | 与 `Dockerfile` 的 `ARG PNPM_VERSION`、CI 的 `PNPM_VERSION` 一致 |
 | Git | 2.30+ | 最新版 | 只有 `lastUpdated` 需要；缺失时模板会自动关掉它 |
 
 ::: warning 注意
-`package.json` 里通过 `engines` 字段声明了版本要求。如果你的 Node 版本过低，安装时会直接报错，避免出现莫名其妙的构建失败。
+`package.json` 里通过 `engines` 字段声明了**最低**要求。如果你的 Node 版本过低，安装时会直接报错，避免出现莫名其妙的构建失败。
+
+「最低」和「锁定」是两回事：日常开发和 CI 都跑 24，但用 22 也能正常构建。
 :::
 
 检查当前版本：
 
 ```bash
 node -v    # v24.x.x
-pnpm -v    # 10.x 或更高
+pnpm -v    # 12.9.1
 git --version
 ```
 
@@ -59,18 +61,26 @@ node -v
 
 ## 安装 pnpm
 
-Node 16.13 之后自带 Corepack，可以直接启用：
+模板使用 **pnpm 12.9.1**（`Dockerfile` 的 `ARG PNPM_VERSION` 与 CI 的 `PNPM_VERSION` 都是这个值）。
+
+::: tip 为什么 `package.json` 里没有 `packageManager` 字段
+写上 `packageManager` 之后，pnpm 11+ 会把它自己作为依赖装进 `node_modules` 并记进 `pnpm-lock.yaml`，lockfile 会凭空多出几十 MB。
+
+代价是 Corepack 和 `pnpm/action-setup` 无法自动推断版本，所以**版本号必须在三处保持显式一致**：本文档、`Dockerfile`、`.github/workflows/ci.yml`。
+:::
+
+用 Corepack 启用（Node 自带）：
 
 ```bash
 corepack enable
-corepack prepare pnpm@latest --activate
+corepack prepare pnpm@12.9.1 --activate
 pnpm -v
 ```
 
-也可以独立安装：
+也可以直接全局安装：
 
 ```bash
-npm install -g pnpm
+npm install -g pnpm@12.9.1
 ```
 
 ## 安装依赖

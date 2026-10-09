@@ -37,7 +37,7 @@ features:
 <div class="gb-home">
   <div class="gb-home__section">
     <p class="gb-home__title">30 秒跑起来</p>
-    <p class="gb-home__subtitle">需要 Node.js 22+ 与 pnpm</p>
+    <p class="gb-home__subtitle">需要 Node.js 24 与 pnpm 12</p>
     <div class="gb-home__code">
 
 ```bash

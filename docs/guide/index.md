@@ -18,7 +18,7 @@ description: 从零开始了解这个 GitBook 风格文档模板，并在五分�
 
 ## 1.2 五分钟上手
 
-假设你已经装好了 Node.js 22+ 和 pnpm，那么只需要四条命令：
+假设你已经装好了 Node.js 24（最低支持 22）和 pnpm 12，那么只需要四条命令：
 
 ```bash
 pnpm install     # 安装依赖

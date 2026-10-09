@@ -59,11 +59,11 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 12.9.1          # 必须显式指定，与 Dockerfile 的 PNPM_VERSION 一致
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24         # 与 .nvmrc 和 Dockerfile 的 node:24-alpine 一致
           cache: pnpm
 
       - name: Install
@@ -119,7 +119,7 @@ jobs:
   publish = "docs/.vitepress/dist"
 
 [build.environment]
-  NODE_VERSION = "22"
+  NODE_VERSION = "24"
 ```
 
 :::
