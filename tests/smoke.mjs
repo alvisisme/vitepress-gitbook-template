@@ -235,6 +235,41 @@ check('流程图 / 时序图 / 状态图页面均含图表', () => {
   return `${count} 处`
 })
 
+check('每段 Mermaid 源码都能解出非空内容，且不含会让词法器报错的三个反引号', () => {
+  // 组件的 base64 源码保存在页面 chunk 的编译结果里（code:"<base64>"），
+  // SSR 之后 HTML 里只剩 <figure class="gb-mermaid">，所以两边都扫一遍。
+  const sources = []
+
+  const assetsDir = join(DIST, 'assets')
+  for (const name of readdirSync(assetsDir)) {
+    if (!name.endsWith('.js') || name.endsWith('.lean.js')) continue
+    const content = readFileSync(join(assetsDir, name), 'utf8')
+    for (const m of content.matchAll(/\bcode:"([A-Za-z0-9+/=]{8,})"/g)) {
+      sources.push({ file: name, b64: m[1] })
+    }
+  }
+
+  for (const file of walkHtml()) {
+    const content = readFileSync(file, 'utf8')
+    for (const m of content.matchAll(/<Mermaid[^>]*\bcode="([A-Za-z0-9+/=]{8,})"/g)) {
+      sources.push({ file: relative(DIST, file), b64: m[1] })
+    }
+  }
+
+  assert(sources.length > 0, '一份 Mermaid 源码都没找到，插件可能没生效')
+
+  // 真正的语法校验要靠浏览器渲染，但「节点文字里写了 ```」这类错误
+  // 一定会让 Mermaid 报 Lexical error，可以在这里静态拦住。
+  const problems = []
+  for (const { file, b64 } of sources) {
+    const src = Buffer.from(b64, 'base64').toString('utf8')
+    if (!src.trim()) problems.push(`${file}: 源码为空`)
+    else if (src.includes('```')) problems.push(`${file}: 源码含三个反引号`)
+  }
+  assert(problems.length === 0, `Mermaid 源码有问题：\n      - ${problems.join('\n      - ')}`)
+  return `${sources.length} 段源码`
+})
+
 check('数学公式已渲染（MathJax 输出）', () => {
   const html = read('features/math.html')
   const hasMath = /mjx-container|MathJax|class="MathJax/.test(html)
