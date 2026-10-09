@@ -5,7 +5,7 @@ import { useData } from 'vitepress'
 /**
  * Mermaid 图表组件。
  *
- * - markdown 侧的 `plugins/mermaid.mts` 会把 ```mermaid 代码块编译成
+ * - markdown 侧的 `plugins/mermaid.ts` 会把 ```mermaid 代码块编译成
  *   `<Mermaid code="<base64>" />`。
  * - 这里在**浏览器端**动态 `import('mermaid')`，构建时完全不执行 mermaid，
  *   所以 SSR 不会碰到 DOM，也不会拖慢首屏（独立 chunk，按需加载）。

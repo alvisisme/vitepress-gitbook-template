@@ -225,7 +225,10 @@
 }
 
 /* 最后更新时间 / 编辑此页 */
+/* 日期文本由 VitePress 在水合时填充（避免时区不一致导致的 hydration mismatch），
+   所以静态 HTML 里只有一个空的 <time>，这是预期行为。 */
 .VPDocFooter .last-updated,
+.VPDocFooter .VPLastUpdated,
 .VPDocFooter .edit-link-button {
   font-size: 13.5px;
   color: var(--vp-c-text-3);
