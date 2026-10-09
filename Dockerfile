@@ -77,10 +77,12 @@ LABEL org.opencontainers.image.title="vitepress-gitbook-template" \
       org.opencontainers.image.description="GitBook 风格的 VitePress 静态文档站点" \
       org.opencontainers.image.licenses="MIT"
 
+# 安全头单独放一个 snippet，供多个 location 复用
+COPY docker/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build --chown=nginx:nginx /app/docs/.vitepress/dist /usr/share/nginx/html
 
-# 让 nginx 能读、能写缓存目录
+# 让 nginx 能读、能写缓存目录；nginx -t 会在构建期就拦住配置语法错误
 RUN chown -R nginx:nginx /usr/share/nginx/html \
  && nginx -t
 

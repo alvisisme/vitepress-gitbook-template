@@ -104,29 +104,35 @@ expect_contains "/" "GitBook Style Docs"
 expect_contains "/guide/introduction.html" "1.1 模板简介"
 expect_contains "/features/code.html" "shiki"
 expect_contains "/features/mermaid.html" "gb-mermaid"
+expect_contains "/this-page-does-not-exist" "404"
 
-echo "-- 响应头 --"
-hdr="$(curl -sSI "${BASE}/assets/")"
-if printf '%s' "${hdr}" | grep -qi 'x-content-type-options'; then
-  echo "  ✓ 安全响应头存在"
-else
-  echo "  ✗ 缺少安全响应头"
-  fail=1
-fi
-
-asset_css="$(curl -sS "${BASE}/" | grep -o '/assets/[^"]*\.css' | head -1 || true)"
-if [ -n "${asset_css}" ]; then
-  cache_hdr="$(curl -sSI "${BASE}${asset_css}")"
-  if printf '%s' "${cache_hdr}" | grep -qi 'immutable'; then
-    echo "  ✓ 静态资源长缓存生效（${asset_css}）"
+# 校验响应头：$1=完整响应头 $2=头名称 $3=期望包含的值 $4=说明
+check_header() {
+  local haystack="$1" name="$2" needle="$3" label="$4"
+  if printf '%s' "${haystack}" | grep -qi "^${name}:.*${needle}"; then
+    echo "  ✓ ${label}"
   else
-    echo "  ✗ 静态资源缺少 immutable 缓存头"
+    echo "  ✗ ${label}（响应头里没有 ${name}: …${needle}）"
     fail=1
   fi
-else
+}
+
+echo "-- 缓存与安全响应头 --"
+asset_css="$(curl -sS "${BASE}/" | grep -o '/assets/[^"]*\.css' | head -1 || true)"
+if [ -z "${asset_css}" ]; then
   echo "  ✗ 首页没有引用 CSS 资源"
   fail=1
+else
+  echo "  抽查资源：${asset_css}"
+  asset_hdr="$(curl -sSI "${BASE}${asset_css}")"
+  check_header "${asset_hdr}" "cache-control" "immutable" "带 hash 的资源长缓存（immutable）"
+  check_header "${asset_hdr}" "x-content-type-options" "nosniff" "安全头在 /assets/ 下依然存在"
+  check_header "${asset_hdr}" "x-frame-options" "SAMEORIGIN" "X-Frame-Options 生效"
 fi
+
+html_hdr="$(curl -sSI "${BASE}/guide/introduction.html")"
+check_header "${html_hdr}" "cache-control" "no-cache" "HTML 不被缓存"
+check_header "${html_hdr}" "x-content-type-options" "nosniff" "HTML 带安全响应头"
 
 echo ""
 if [ "${fail}" -ne 0 ]; then
