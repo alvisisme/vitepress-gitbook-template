@@ -1,0 +1,255 @@
+/**
+ * 自定义组件与提示块。
+ */
+
+/* ============================================================
+   Mermaid 图表
+   ============================================================ */
+.gb-mermaid {
+  margin: 24px 0;
+  padding: 20px 16px 12px;
+  border: 1px solid var(--gb-border);
+  border-radius: var(--gb-radius);
+  background-color: var(--vp-c-bg);
+  text-align: center;
+  overflow-x: auto;
+}
+
+.gb-mermaid__caption {
+  margin-bottom: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gb-text-muted);
+}
+
+.gb-mermaid__canvas svg {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.gb-mermaid__loading {
+  padding: 28px 0;
+  font-size: 13.5px;
+  color: var(--vp-c-text-3);
+}
+
+.gb-mermaid__loading::after {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  animation: gb-dots 1.2s steps(4, end) infinite;
+}
+
+@keyframes gb-dots {
+  0% {
+    content: '';
+  }
+  25% {
+    content: '.';
+  }
+  50% {
+    content: '..';
+  }
+  75% {
+    content: '...';
+  }
+}
+
+/* 渲染失败时把原始错误显示出来，方便定位语法问题 */
+.gb-mermaid.is-error {
+  border-color: var(--gb-callout-danger);
+  text-align: left;
+}
+
+.gb-mermaid__error {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background-color: var(--vp-c-danger-soft);
+  color: var(--vp-c-danger-1);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+/* ============================================================
+   卡片 / 卡片网格
+   ============================================================ */
+.gb-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.gb-card,
+.vp-doc .gb-card {
+  display: block;
+  padding: 20px;
+  border: 1px solid var(--gb-border);
+  border-radius: var(--gb-radius-lg);
+  background-color: var(--vp-c-bg);
+  /* 用两个类压过 `.vp-doc a { text-decoration: underline }`，避免动用 !important */
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+a.gb-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--vp-c-brand-1);
+  box-shadow: var(--gb-shadow);
+}
+
+.gb-card__icon {
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.gb-card__title {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--vp-c-text-1);
+  margin-bottom: 6px;
+}
+
+.gb-card__desc,
+.gb-card__body {
+  display: block;
+  font-size: 14px;
+  line-height: 1.68;
+  color: var(--gb-text-muted);
+}
+
+.gb-card__body > p {
+  margin: 0;
+}
+
+/* 卡片里的链接沿用主色 */
+a.gb-card:hover .gb-card__title {
+  color: var(--vp-c-brand-1);
+}
+
+/* ============================================================
+   提示块（::: tip / info / warning / danger / details）
+   ============================================================ */
+.vp-doc .custom-block {
+  border: 1px solid var(--gb-border);
+  border-left: 4px solid var(--vp-c-text-3);
+  border-radius: var(--gb-radius);
+  padding: 14px 18px;
+  margin: 22px 0;
+  font-size: 14.5px;
+  line-height: 1.7;
+  transition: border-color 0.2s ease;
+}
+
+.vp-doc .custom-block .custom-block-title {
+  font-size: 14px;
+  font-weight: 650;
+  margin-bottom: 6px;
+}
+
+.vp-doc .custom-block p {
+  margin: 0;
+}
+
+.vp-doc .custom-block p + p {
+  margin-top: 10px;
+}
+
+.vp-doc .custom-block.tip {
+  border-color: var(--gb-border);
+  border-left-color: var(--gb-callout-tip);
+  background-color: var(--vp-c-brand-soft);
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc .custom-block.tip .custom-block-title {
+  color: var(--gb-callout-tip);
+}
+
+.vp-doc .custom-block.info {
+  border-left-color: var(--gb-callout-info);
+  background-color: var(--gb-tint);
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc .custom-block.info .custom-block-title {
+  color: var(--gb-callout-info);
+}
+
+.vp-doc .custom-block.warning {
+  border-left-color: var(--gb-callout-warning);
+  background-color: var(--vp-c-warning-soft);
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc .custom-block.warning .custom-block-title {
+  color: var(--gb-callout-warning);
+}
+
+.vp-doc .custom-block.danger {
+  border-left-color: var(--gb-callout-danger);
+  background-color: var(--vp-c-danger-soft);
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc .custom-block.danger .custom-block-title {
+  color: var(--gb-callout-danger);
+}
+
+.vp-doc .custom-block.important {
+  border-left-color: var(--gb-callout-important);
+  background-color: var(--vp-c-purple-soft);
+  color: var(--vp-c-text-1);
+}
+
+.vp-doc .custom-block.important .custom-block-title {
+  color: var(--gb-callout-important);
+}
+
+/* details 折叠块 */
+.vp-doc .custom-block.details {
+  border-left-color: var(--gb-border-strong);
+  background-color: var(--gb-tint);
+}
+
+/* ============================================================
+   行内标记
+   ============================================================ */
+
+/* <Badge> 是 VitePress 内置组件，这里只调圆角 */
+.vp-doc .VPBadge {
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* 键盘按键 */
+.vp-doc kbd {
+  border-radius: 6px;
+  border: 1px solid var(--gb-border-strong);
+  background-color: var(--gb-tint);
+  box-shadow: 0 1px 0 var(--gb-border-strong);
+  font-size: 0.85em;
+  padding: 1px 6px;
+}
+
+/* 高亮 <mark> */
+.vp-doc mark {
+  border-radius: 4px;
+  padding: 1px 4px;
+  background-color: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+}

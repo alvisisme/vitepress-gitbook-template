@@ -1,0 +1,86 @@
+/**
+ * 全局基础与整体布局。
+ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* GitBook 的正文偏灰，比纯黑柔和一些 */
+  color: var(--vp-c-text-1);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 顶部导航：底部加一条细线，和内容区分开 */
+.VPNav .VPNavBar {
+  border-bottom: 1px solid var(--gb-border);
+}
+
+.VPNavBar.has-sidebar .content {
+  background-color: var(--vp-c-bg);
+}
+
+/* 顶部站点标题略微收紧 */
+.VPNavBarTitle .title {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+/* 正文区域整体宽度：比默认更宽，长文档更透气。
+   注意要写成 `.VPDoc.has-aside .content-container`，
+   因为 VitePress 自带规则就是这个选择器，优先级必须打平后再靠加载顺序取胜。 */
+@media (min-width: 960px) {
+  .VPDoc .container {
+    max-width: 1280px;
+  }
+
+  .VPDoc .content-container,
+  .VPDoc.has-aside .content-container {
+    max-width: var(--gb-content-max-width);
+  }
+}
+
+/* 右侧「本页目录」 */
+.VPDocAsideOutline .outline-title {
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+.VPDocAsideOutline .outline-link {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.VPDocAsideOutline .outline-link.active {
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
+}
+
+/* 回到顶部按钮更柔和 */
+.VPBackToTop .icon {
+  color: var(--vp-c-brand-1);
+}
+
+/* 滚动条（桌面端）—— 让长目录不那么抢眼 */
+@media (min-width: 960px) {
+  .VPSidebar::-webkit-scrollbar,
+  .VPDocAside::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .VPSidebar::-webkit-scrollbar-thumb,
+  .VPDocAside::-webkit-scrollbar-thumb {
+    background-color: var(--gb-border-strong);
+    border-radius: 4px;
+  }
+
+  .VPSidebar::-webkit-scrollbar-track,
+  .VPDocAside::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}

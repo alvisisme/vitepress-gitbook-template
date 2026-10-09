@@ -1,0 +1,19 @@
+/**
+ * 样式入口。
+ *
+ * 拆分原则：
+ *   vars.css       —— 设计变量（颜色、字体、间距），换肤只改这里
+ *   base.css       —— 全局基础与整体布局宽度
+ *   sidebar.css    —— 左侧目录（GitBook 观感的核心）
+ *   content.css    —— 正文排版
+ *   home.css       —— 首页
+ *   components.css —— 自定义组件与提示块
+ *
+ * 加载顺序即覆盖顺序，自定义规则要放在 VitePress 默认主题之后才生效。
+ */
+@import './vars.css';
+@import './base.css';
+@import './sidebar.css';
+@import './content.css';
+@import './home.css';
+@import './components.css';

@@ -1,0 +1,79 @@
+/**
+ * 设计变量 —— 想换配色 / 字体，改这个文件就够了。
+ */
+
+:root {
+  /* ---------- 品牌色（主色） ---------- */
+  --vp-c-brand-1: #2f5fe0;
+  --vp-c-brand-2: #2450c8;
+  --vp-c-brand-3: #1d43ab;
+  --vp-c-brand-soft: rgba(47, 95, 224, 0.14);
+  --vp-c-brand: var(--vp-c-brand-1);
+
+  /* ---------- 字体 ---------- */
+  --vp-font-family-base:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Noto Sans SC', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji';
+  --vp-font-family-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', 'Courier New',
+    'PingFang SC', 'Microsoft YaHei', monospace;
+
+  /* ---------- 布局 ---------- */
+  --vp-sidebar-width: 304px;
+  --vp-layout-max-width: 1600px;
+
+  /* ---------- 模板自有变量（gb = gitbook） ---------- */
+  --gb-sidebar-bg: #fbfbfd;
+  --gb-border: rgba(16, 24, 40, 0.09);
+  --gb-border-strong: rgba(16, 24, 40, 0.16);
+  --gb-content-max-width: 860px;
+  --gb-radius: 10px;
+  --gb-radius-lg: 16px;
+  --gb-text-muted: #5b6474;
+  --gb-tint: #f7f9fc;
+  --gb-shadow: 0 10px 30px -18px rgba(16, 24, 40, 0.35);
+
+  /* ---------- 首页 Hero ---------- */
+  /* VitePress 用这两个变量控制站点名的渐变文字，比覆盖 .name/.clip 更稳 */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    118deg,
+    var(--vp-c-brand-1) 10%,
+    #7c5cff 90%
+  );
+
+  /* 提示块（callout）配色 */
+  --gb-callout-tip: #2f5fe0;
+  --gb-callout-info: #64748b;
+  --gb-callout-warning: #d97706;
+  --gb-callout-danger: #dc2626;
+  --gb-callout-important: #7c3aed;
+}
+
+.dark {
+  --vp-c-brand-1: #7ea6ff;
+  --vp-c-brand-2: #9ab9ff;
+  --vp-c-brand-3: #b6ccff;
+  --vp-c-brand-soft: rgba(126, 166, 255, 0.16);
+
+  --gb-sidebar-bg: #15171c;
+  --gb-border: rgba(255, 255, 255, 0.1);
+  --gb-border-strong: rgba(255, 255, 255, 0.18);
+  --gb-text-muted: #9aa3b2;
+  --gb-tint: #1b1e25;
+  --gb-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.8);
+
+  --gb-callout-tip: #7ea6ff;
+  --gb-callout-info: #94a3b8;
+  --gb-callout-warning: #fbbf24;
+  --gb-callout-danger: #f87171;
+  --gb-callout-important: #c4b5fd;
+
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    118deg,
+    var(--vp-c-brand-1) 10%,
+    #b18cff 90%
+  );
+}

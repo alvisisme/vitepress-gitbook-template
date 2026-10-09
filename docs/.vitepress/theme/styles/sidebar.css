@@ -1,0 +1,92 @@
+/**
+ * 左侧目录 —— GitBook 观感的核心。
+ *
+ * 序号（1. / 1.1 / 1.1.1）已经在 `sidebar.mts` 里写进文本了，
+ * 这里只负责颜色、间距、悬停与选中态。
+ */
+
+.VPSidebar {
+  background-color: var(--gb-sidebar-bg);
+  border-right: 1px solid var(--gb-border);
+}
+
+@media (min-width: 960px) {
+  .VPSidebar {
+    padding-top: 26px;
+    padding-bottom: 48px;
+  }
+}
+
+/* ---------- 目录项：用「文字左侧留白 + 圆角背景」做出胶囊感 ---------- */
+.VPSidebarItem > .item > .link {
+  border-radius: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-left: -8px;
+  margin-right: -8px;
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.VPSidebarItem.is-link > .item > .link:hover {
+  background-color: var(--vp-c-default-soft);
+}
+
+.VPSidebarItem.is-link.is-active > .item > .link {
+  background-color: var(--vp-c-brand-soft);
+}
+
+/* ---------- 字号与字重层级 ---------- */
+
+/* 一级：章 */
+.VPSidebarItem.level-0 > .item > .text,
+.VPSidebarItem.level-0 > .item > .link > .text {
+  font-size: 14.5px;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  color: var(--vp-c-text-1);
+}
+
+/* 二级：节 */
+.VPSidebarItem.level-1 > .item > .text,
+.VPSidebarItem.level-1 > .item > .link > .text {
+  font-size: 13.5px;
+  color: var(--vp-c-text-2);
+}
+
+/* 三级及更深 */
+.VPSidebarItem.level-2 > .item > .text,
+.VPSidebarItem.level-2 > .item > .link > .text,
+.VPSidebarItem.level-3 > .item > .text,
+.VPSidebarItem.level-3 > .item > .link > .text {
+  font-size: 13px;
+  color: var(--vp-c-text-3);
+}
+
+/* 选中项统一用主色 + 加粗，序号也一起变，指向更明确。
+   注意：`is-active` 是 VitePress 在浏览器端水合之后才加上的类，
+   构建产物里看不到，只在 `.VPSidebarItem` 上能看到 `has-active`（含活动子项）。 */
+.VPSidebarItem.is-link.is-active > .item > .link > .text {
+  color: var(--vp-c-brand-1);
+  font-weight: 620;
+}
+
+/* 章节之间的分隔更清晰 */
+.VPSidebarItem.level-0 {
+  padding-bottom: 26px;
+}
+
+.VPSidebarItem.level-0 + .VPSidebarItem.level-0 {
+  padding-top: 2px;
+}
+
+/* 折叠箭头颜色弱化 */
+.VPSidebarItem .caret {
+  color: var(--vp-c-text-3);
+}
+
+/* 目录顶部的分组标题（如果启用了多个 sidebar 分组） */
+.VPSidebar .group + .group {
+  border-top: 1px solid var(--gb-border);
+}
