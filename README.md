@@ -23,7 +23,7 @@
 ## 🚀 快速开始
 
 ```bash
-# 环境要求：Node.js >= 22，pnpm >= 9
+# 环境要求：Node.js 24（最低支持 22）、pnpm 12.9.1
 node -v
 pnpm -v
 
