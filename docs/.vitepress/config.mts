@@ -1,6 +1,29 @@
+import { existsSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vitepress'
 import { sidebar } from './sidebar'
 import { mermaidPlugin } from './plugins/mermaid'
+
+/**
+ * 是否需要「最后更新时间」。
+ *
+ * 打开后 VitePress 会执行 `git log -1` 读取每个文件的提交时间，
+ * 于是就有两个前提：仓库里有 `.git`，并且运行环境里装了 git。
+ * Docker 构建时 `.git` 被 .dockerignore 排除，node:alpine 里也没有 git，
+ * 无脑打开会直接抛 `spawn git ENOENT` 让构建失败。
+ *
+ * 这里按「仓库根目录有没有 .git」自动判断，
+ * 也可以用环境变量 VITEPRESS_LAST_UPDATED=1/0 强制覆盖。
+ */
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
+
+const lastUpdated =
+  process.env.VITEPRESS_LAST_UPDATED === '1'
+    ? true
+    : process.env.VITEPRESS_LAST_UPDATED === '0'
+      ? false
+      : existsSync(join(REPO_ROOT, '.git'))
 
 /**
  * ============================================================
@@ -43,7 +66,7 @@ export default defineConfig({
   base: '/',
   // 产物中保留 .html，兼容 GitHub Pages / Nginx / 对象存储等所有静态托管
   cleanUrls: false,
-  lastUpdated: true,
+  lastUpdated,
   sitemap: { hostname: SITE.url },
   // 文档里经常需要写 http://localhost:5173 这类本地地址，
   // 它们不是站内链接，跳过死链校验。
@@ -143,10 +166,12 @@ export default defineConfig({
     },
 
     notFound: {
+      code: '404',
       title: '页面走丢了',
       quote: '你访问的地址不存在，或者内容已经被移动到别处。',
+      link: '/',
       linkLabel: '回到首页',
-      linkText: '返回首页'
+      linkText: '回到首页'
     }
   },
 
