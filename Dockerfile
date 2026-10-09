@@ -77,6 +77,10 @@ LABEL org.opencontainers.image.title="vitepress-gitbook-template" \
       org.opencontainers.image.description="GitBook 风格的 VitePress 静态文档站点" \
       org.opencontainers.image.licenses="MIT"
 
+# 先清掉 nginx 镜像自带的 index.html / 50x.html 欢迎页，
+# 否则它们会作为无主文件留在站点根目录里（50x.html 尤其容易被漏掉）
+RUN rm -rf /usr/share/nginx/html/*
+
 # 安全头单独放一个 snippet，供多个 location 复用
 COPY docker/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
