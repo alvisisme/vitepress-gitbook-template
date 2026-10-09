@@ -1,0 +1,38 @@
+# =============================================================================
+#  本地一键构建 + 运行
+#
+#    docker compose up -d --build      构建并启动，访问 http://localhost:8080
+#    docker compose logs -f            查看日志
+#    docker compose down               停止并清理
+#
+#  只跑测试：
+#    docker build --target test -t docs:test .
+# =============================================================================
+
+services:
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+      args:
+        NODE_IMAGE: node:24-alpine
+        NGINX_IMAGE: nginx:1.27-alpine
+    image: vitepress-gitbook-template:latest
+    container_name: vitepress-gitbook-docs
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 3s
+      start_period: 5s
+      retries: 3
+    labels:
+      - "com.example.description=GitBook 风格的 VitePress 文档站点"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
