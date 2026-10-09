@@ -183,12 +183,22 @@ pie title 文档访问来源
 
 ```mermaid
 flowchart LR
-  A["```mermaid 代码块"] --> B["markdown-it 插件<br/>plugins/mermaid.mts"]
+  A["mermaid 代码块"] --> B["markdown-it 插件<br/>plugins/mermaid.ts"]
   B --> C["&lt;Mermaid code='base64' /&gt;"]
   C --> D["构建产物<br/>只有占位符"]
   D --> E["浏览器端<br/>动态 import('mermaid')"]
   E --> F["绘制 SVG"]
 ```
+
+::: warning 节点文字里不要写三个反引号
+Mermaid 的词法分析器遇到 `` ``` `` 会直接报 `Lexical error`，图表位置会显示红色错误信息。
+想在节点里强调文字，用 Mermaid 自己的 markdown 字符串语法（外层一对反引号）：
+
+```mermaid
+flowchart LR
+  A["`**加粗** 说明`"] --> B["普通文本"]
+```
+:::
 
 三个关键设计：
 

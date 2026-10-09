@@ -40,7 +40,7 @@ sequenceDiagram
   participant HTML as 静态 HTML
   participant Browser as 浏览器
 
-  MD->>VP: ```mermaid 代码块
+  MD->>VP: mermaid 代码块
   VP->>HTML: <Mermaid code="base64" />
   Note over HTML: 此时还没有图，只有一个占位
   HTML->>Browser: 页面加载

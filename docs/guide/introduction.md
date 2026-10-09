@@ -42,7 +42,7 @@ flowchart LR
 
 这个模板**没有 fork** VitePress，而是通过标准的扩展点做增量定制，所以升级 VitePress 基本不会冲突。具体新增了：
 
-1. **自动编号的目录**：`docs/.vitepress/sidebar.mts` 里维护一份目录树，序号由 `numberSidebar()` 递归生成。
+1. **自动编号的目录**：`docs/.vitepress/sidebar.ts` 里维护一份目录树，序号由 `numberSidebar()` 递归生成。
 2. **GitBook 风格主题**：`docs/.vitepress/theme/` 下用 `extends: DefaultTheme` 继承默认主题，只覆盖样式与个别组件。
 3. **Mermaid 插件**：一个 40 行左右的 markdown-it 插件，把 ` ```mermaid ` 代码块编译成懒加载的 Vue 组件。
 4. **自定义组件**：`<Card>` / `<CardGrid>` 用于首页和章节导览。

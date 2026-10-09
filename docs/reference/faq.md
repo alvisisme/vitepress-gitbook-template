@@ -82,14 +82,14 @@ NODE_OPTIONS=--max-old-space-size=4096 pnpm build
 按可能性排序：
 
 1. 浏览器缓存 —— 硬刷新（<kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd>）；
-2. 改的是 `sidebar.mts` 或 `config.mts` —— 这两个文件在配置阶段执行，需要重启 `pnpm dev`；
+2. 改的是 `sidebar.ts` 或 `config.mts` —— 这两个文件在配置阶段执行，需要重启 `pnpm dev`；
 3. VitePress 缓存损坏 —— `pnpm run clean` 后重来。
 :::
 
 ## 目录与编号
 
 ::: details 新增了 Markdown 文件，但目录里没有
-模板用的是**显式目录树**，不会扫描文件系统。需要在 `docs/.vitepress/sidebar.mts` 的 `docTree` 里手动加一项。这是刻意的设计：目录顺序可控、可 review。
+模板用的是**显式目录树**，不会扫描文件系统。需要在 `docs/.vitepress/sidebar.ts` 的 `docTree` 里手动加一项。这是刻意的设计：目录顺序可控、可 review。
 :::
 
 ::: details 编号能不能从 0 开始，或者用「第一章」
@@ -147,6 +147,16 @@ Mermaid 对特殊字符敏感，用引号包起来：
 A[带 空格 的节点]      ✗
 A["带 空格 的节点"]    ✓
 ```
+
+还有一个特别容易踩的坑：**节点文字里不能出现三个反引号**。想在文档里展示 ` ```mermaid ` 这种字面量时，很容易顺手写进节点标签，Mermaid 词法器会直接报 `Lexical error on line N`，页面上那个位置会显示红色错误信息。
+
+```text
+A["mermaid 代码块"]      ✓  不带反引号
+A["```mermaid 代码块"]   ✗  词法器报 Lexical error
+A["`**加粗** 说明`"]     ✓  用 Mermaid 自己的 markdown 字符串语法
+```
+
+冒烟测试（`pnpm test`）会解码产物里所有 Mermaid 源码，拦住「源码含三个反引号」这类问题。
 :::
 
 ::: details 深色模式下图表没变
@@ -258,14 +268,16 @@ ls /usr/share/nginx/html
 :::
 
 ::: details lastUpdated 不显示
-需要 git 历史。CI 里加 `fetch-depth: 0`。Docker 构建因为 `.dockerignore` 排除了 `.git`，这一项会跳过。
+需要仓库里有 `.git` 且环境装了 git。CI 里加 `fetch-depth: 0` 拉完整历史。
+
+Docker 构建因为 `.dockerignore` 排除了 `.git`，模板会自动关掉这一项；想强制控制可以用 `VITEPRESS_LAST_UPDATED=1` / `=0`。
 :::
 
 ## 二次开发
 
 ::: details 想加一个新的 markdown-it 插件
 ```ts
-// docs/.vitepress/plugins/my-plugin.mts
+// docs/.vitepress/plugins/my-plugin.ts
 import type MarkdownIt from 'markdown-it'
 
 export function myPlugin(md: MarkdownIt) {

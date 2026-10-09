@@ -65,7 +65,30 @@ base: '/my-docs/'    // 部署在 https://example.com/my-docs/
 
 ### `lastUpdated`
 
-需要 git 历史。在 CI 里记得 `fetch-depth: 0`，否则时间会不准。在 Docker 构建中，因为 `.git` 被 `.dockerignore` 排除，这项会静默跳过（不会报错）。
+打开后 VitePress 会调用 `git log -1` 读取每个文件的提交时间，所以有两个前提：仓库里有 `.git`，并且运行环境装了 git。
+
+模板里写的是「自动判断」，而不是直接写 `true`：
+
+```ts
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
+
+const lastUpdated =
+  process.env.VITEPRESS_LAST_UPDATED === '1'
+    ? true
+    : process.env.VITEPRESS_LAST_UPDATED === '0'
+      ? false
+      : existsSync(join(REPO_ROOT, '.git'))
+```
+
+原因是 Docker 构建里 `.git` 被 `.dockerignore` 排除，`node:alpine` 镜像里也没有 git，直接写 `true` 会抛 `spawn git ENOENT` **让构建失败**。
+
+| 场景 | 行为 |
+| --- | --- |
+| 本地开发（有 `.git`） | 显示最后更新时间 |
+| Docker 构建（无 `.git`） | 自动关闭，不影响构建 |
+| 想强制打开/关闭 | `VITEPRESS_LAST_UPDATED=1` 或 `=0` |
+
+在 CI 里想显示准确时间，记得 `fetch-depth: 0` 拉取完整历史。
 
 ## Markdown 渲染
 
@@ -75,7 +98,6 @@ markdown: {
   lineNumbers: false,
   math: true,
   image: { lazyLoading: true },
-  anchor: { permalink: false },
   config: (md) => {
     md.use(mermaidPlugin)
   }
@@ -88,8 +110,13 @@ markdown: {
 | `lineNumbers` | 是否全局显示行号；建议保持 `false`，按块用 `:line-numbers` 开启 |
 | `math` | 是否启用数学公式，需要 `markdown-it-mathjax3` |
 | `image.lazyLoading` | 图片懒加载 |
-| `anchor.permalink` | 标题锚点链接图标；模板用 CSS 控制成「悬停才出现」 |
 | `config` | 注册额外 markdown-it 插件的地方 |
+
+::: warning 不要关闭 `anchor.permalink`
+`markdown.anchor.permalink` 保持默认开启。标题里的锚点链接不只是「点击复制链接」用的——**VitePress 的本地搜索正是靠它来切分章节的**，关掉之后搜索索引会变成空的（`documentCount` 为 0），表现为「搜索什么都搜不到」。
+
+锚点图标默认就靠 CSS 隐藏成「悬停才出现」，不需要为了美观去关它。
+:::
 
 ::: tip 想加更多 Markdown 语法
 在 `config` 回调里继续 `md.use(...)` 即可，比如加脚注、下标、任务列表增强等：
@@ -129,7 +156,7 @@ nav: [
 
 ### 侧边栏
 
-模板把侧边栏放在 `sidebar.mts` 里生成，见 [4.2 目录与自动编号](/reference/sidebar)。
+模板把侧边栏放在 `sidebar.ts` 里生成，见 [4.2 目录与自动编号](/reference/sidebar)。
 
 ### 右侧大纲
 

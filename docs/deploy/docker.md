@@ -106,6 +106,7 @@ RUN node tests/smoke.mjs
 
 ```dockerfile
 FROM nginx:1.27-alpine AS runtime
+COPY docker/security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build --chown=nginx:nginx /app/docs/.vitepress/dist /usr/share/nginx/html
 RUN chown -R nginx:nginx /usr/share/nginx/html && nginx -t
@@ -126,14 +127,16 @@ location / {
 }
 
 # 2. 带 hash 的资源永久缓存
-location /assets/ {
-    expires 1y;
-    add_header Cache-Control "public, immutable";
+#    ^~ 表示命中前缀后不再尝试正则 location
+location ^~ /assets/ {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "public, max-age=31536000, immutable";
 }
 
 # 3. HTML 不缓存，保证发版立即生效
 location ~* \.html$ {
-    add_header Cache-Control "no-cache, must-revalidate";
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "no-cache";
 }
 
 # 4. 自定义 404 页面
@@ -144,7 +147,13 @@ error_page 404 /404.html;
 如果 HTML 被 CDN 或浏览器缓存住，用户会在发版后长时间看到旧页面，而且因为资源文件名带 hash，新旧混用还可能直接白屏。
 :::
 
-配置里还包含 gzip 压缩和几个安全响应头（`X-Content-Type-Options`、`X-Frame-Options`、`Referrer-Policy`、`Permissions-Policy`）。
+### 为什么要单独一个 `security-headers.conf`
+
+nginx 的 `add_header` 有个反直觉的规则：**只有当当前层级完全没有 `add_header` 时，才会继承上层的**。
+
+也就是说，只要在某个 `location` 里写了一行 `add_header Cache-Control ...`，`server` 级别的那几个安全响应头在这个 `location` 里就**全部失效**了。缓存策略和安全头恰好都靠 `add_header` 实现，很容易踩。
+
+所以把安全头抽成 `/etc/nginx/snippets/security-headers.conf`，凡是自己写了 `add_header` 的 `location` 都 `include` 一次。`scripts/docker-verify.sh` 会分别在静态资源和 HTML 上校验这些头确实还在。
 
 ## 冒烟测试做了什么
 

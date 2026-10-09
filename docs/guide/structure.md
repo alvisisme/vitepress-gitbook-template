@@ -12,9 +12,9 @@ vitepress-gitbook-template/
 ├── docs/                              # 站点根目录（VitePress 的 srcDir）
 │   ├── .vitepress/
 │   │   ├── config.mts                 # ★ 站点总配置：标题、导航、搜索、Markdown 选项
-│   │   ├── sidebar.mts                # ★ 目录树 + 自动编号逻辑
+│   │   ├── sidebar.ts                # ★ 目录树 + 自动编号逻辑
 │   │   ├── plugins/
-│   │   │   └── mermaid.mts            # Mermaid 的 markdown-it 插件
+│   │   │   └── mermaid.ts            # Mermaid 的 markdown-it 插件
 │   │   └── theme/
 │   │       ├── index.ts               # ★ 主题入口：继承默认主题、注册全局组件
 │   │       ├── components/
@@ -43,7 +43,8 @@ vitepress-gitbook-template/
 │   ├── deploy/                        # 章节 3：部署指南
 │   └── reference/                     # 章节 4：配置参考
 ├── docker/
-│   └── nginx.conf                     # 运行时 Nginx 配置
+│   ├── nginx.conf                     # 运行时 Nginx 配置
+│   └── security-headers.conf          # 安全响应头（多个 location 复用）
 ├── scripts/
 │   ├── clean.mjs                      # 清理产物
 │   └── docker-verify.sh               # 构建镜像 + 起容器 + HTTP 校验
@@ -67,7 +68,7 @@ vitepress-gitbook-template/
 3. **主题配置**：顶部导航、侧边栏、右侧大纲、本地搜索、编辑链接、页脚。
 4. **构建选项**：Vite 层面的配置。
 
-### `docs/.vitepress/sidebar.mts`
+### `docs/.vitepress/sidebar.ts`
 
 **整站目录的唯一来源**。你在 `docTree` 数组里的书写顺序，直接决定目录里的 `1.` / `1.1` 编号。详细用法见 [4.2 目录与自动编号](/reference/sidebar)。
 
@@ -101,7 +102,7 @@ export default {
 | --- | --- |
 | 站点名称 / 描述 / 域名 | `docs/.vitepress/config.mts` 顶部的 `SITE` 对象 |
 | 顶部导航栏 | `config.mts` 里的 `themeConfig.nav` |
-| 左侧目录顺序与标题 | `docs/.vitepress/sidebar.mts` 的 `docTree` |
+| 左侧目录顺序与标题 | `docs/.vitepress/sidebar.ts` 的 `docTree` |
 | 主色 / 字体 / 圆角 | `docs/.vitepress/theme/styles/vars.css` |
 | 正文字号、行高、表格样式 | `styles/content.css` |
 | 首页文案与卡片 | `docs/index.md` |
@@ -112,13 +113,13 @@ export default {
 
 ## 目录编号和文件结构的关系
 
-需要特别说明：**目录里的一级章节编号和文件夹没有强绑定关系**。编号完全由 `sidebar.mts` 的数组顺序决定。
+需要特别说明：**目录里的一级章节编号和文件夹没有强绑定关系**。编号完全由 `sidebar.ts` 的数组顺序决定。
 
 这样做的好处是，你可以自由地重组目录顺序、把两篇文档换位置，而不需要重命名任何文件或目录。
 
 ```mermaid
 flowchart TD
-  A["sidebar.mts 的 docTree 数组"] -->|numberSidebar 递归编号| B["1. 快速开始"]
+  A["sidebar.ts 的 docTree 数组"] -->|numberSidebar 递归编号| B["1. 快速开始"]
   A --> C["1.1 模板简介"]
   A --> D["2. 功能特性"]
   B --> E["text: '1. 快速开始'<br/>link: '/guide/'"]

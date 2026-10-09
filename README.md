@@ -74,8 +74,8 @@ base ──► deps ──► build ──┬──► test      （只跑产物
 ├── docs/
 │   ├── .vitepress/
 │   │   ├── config.mts            # ★ 站点总配置
-│   │   ├── sidebar.mts           # ★ 目录树 + 自动编号
-│   │   ├── plugins/mermaid.mts   # Mermaid markdown-it 插件
+│   │   ├── sidebar.ts           # ★ 目录树 + 自动编号
+│   │   ├── plugins/mermaid.ts   # Mermaid markdown-it 插件
 │   │   └── theme/
 │   │       ├── index.ts          # ★ 主题入口（继承默认主题 + 注册组件）
 │   │       ├── components/       # Mermaid / Card / CardGrid
@@ -98,7 +98,7 @@ base ──► deps ──► build ──┬──► test      （只跑产物
 | 我想改… | 改这个文件 |
 | --- | --- |
 | 站点名称 / 描述 / 域名 | [`docs/.vitepress/config.mts`](docs/.vitepress/config.mts) 顶部的 `SITE` 对象 |
-| 目录顺序与章节标题 | [`docs/.vitepress/sidebar.mts`](docs/.vitepress/sidebar.mts) 的 `docTree` |
+| 目录顺序与章节标题 | [`docs/.vitepress/sidebar.ts`](docs/.vitepress/sidebar.ts) 的 `docTree` |
 | 主色 / 字体 / 圆角 | [`docs/.vitepress/theme/styles/vars.css`](docs/.vitepress/theme/styles/vars.css) |
 | 首页文案与卡片 | [`docs/index.md`](docs/index.md) |
 | 代码高亮主题 | `config.mts` 里的 `markdown.theme` |
@@ -110,7 +110,7 @@ base ──► deps ──► build ──┬──► test      （只跑产物
 只需要维护一份数组，顺序就是编号：
 
 ```ts
-// docs/.vitepress/sidebar.mts
+// docs/.vitepress/sidebar.ts
 export const docTree: DocNode[] = [
   {
     text: '快速开始',                    // → 1.
@@ -171,18 +171,29 @@ flowchart LR
 
 ## 🧪 测试
 
-`tests/smoke.mjs` 不依赖任何第三方包，直接检查构建产物，覆盖：
+`tests/smoke.mjs` 不依赖任何第三方包，直接检查构建产物，共 24 项断言，覆盖：
 
-1. 22 个预期页面是否全部生成；
-2. 侧边栏编号（`1.` ~ `4.`、`1.1` ~ `1.4`）是否正确；
+1. 21 个预期页面（含 `404.html`）与 `sitemap.xml` 是否全部生成；
+2. 侧边栏编号（`1.` ~ `4.`、`1.1` ~ `1.4`）是否正确、有没有出现 `1.1.` 这种双重标点；
 3. 首页 Hero、代码高亮、Mermaid 占位、MathJax 公式是否渲染；
-4. HTML 里有没有 `{{ }}` 或未解析组件等编译残留；
-5. 遍历所有 `href` / `src`，确认**站内链接无死链**；
-6. 静态资源与懒加载 chunk 是否正确产出。
+4. 每段 Mermaid 源码能否正确解码（能拦住「节点里写了三个反引号」这类必然报错的写法）；
+5. HTML 里有没有 `{{ }}` 或未解析组件等编译残留；
+6. 遍历所有 `href` / `src`，确认**站内链接无死链**；
+7. 静态资源与懒加载 chunk 是否正确产出。
 
 ```bash
 pnpm build && pnpm test
 ```
+
+> **关于 Mermaid 的运行时校验**
+>
+> 冒烟测试只能检查产物本身，图表的**实际绘制**发生在浏览器里。想确认每张图都画出来了，
+> 可以本地起 `pnpm preview`，在浏览器控制台执行下面两句，两个都应该返回空数组：
+>
+> ```js
+> document.querySelectorAll('.gb-mermaid__error')   // 画图报错的图表
+> document.querySelectorAll('.gb-mermaid__loading') // 还没画完的图表
+> ```
 
 ## 📦 部署
 

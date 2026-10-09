@@ -20,10 +20,10 @@ description: 站点配置项、目录编号机制与常见问题的完整参考�
 | 文件 | 作用 | 什么时候改它 |
 | --- | --- | --- |
 | `docs/.vitepress/config.mts` | 站点总配置 | 改标题、导航、搜索、Markdown 行为 |
-| `docs/.vitepress/sidebar.mts` | 目录树与编号 | 增删文档、调整章节顺序 |
+| `docs/.vitepress/sidebar.ts` | 目录树与编号 | 增删文档、调整章节顺序 |
 | `docs/.vitepress/theme/index.ts` | 主题入口 | 注册全局组件、覆盖 Layout |
 | `docs/.vitepress/theme/styles/vars.css` | 设计变量 | 换配色、换字体、改圆角 |
-| `docs/.vitepress/plugins/mermaid.mts` | Mermaid 编译规则 | 改图表代码块的写法 |
+| `docs/.vitepress/plugins/mermaid.ts` | Mermaid 编译规则 | 改图表代码块的写法 |
 | `docs/.vitepress/theme/components/Mermaid.vue` | 图表渲染 | 改图表的主题与布局参数 |
 | `docker/nginx.conf` | 线上 Nginx 行为 | 改缓存策略、端口、安全头 |
 | `Dockerfile` | 镜像构建 | 换 Node/Nginx 版本、调整构建步骤 |
@@ -35,7 +35,7 @@ description: 站点配置项、目录编号机制与常见问题的完整参考�
 | --- | --- | --- |
 | `lang` | `zh-CN` | `en-US` |
 | `cleanUrls` | `false` | `false` |
-| `lastUpdated` | `true` | `false` |
+| `lastUpdated` | 自动判断（有 `.git` 才开启） | `false` |
 | `markdown.lineNumbers` | `false` | `false` |
 | `markdown.math` | `true` | `false` |
 | `markdown.theme` | `github-light` / `github-dark` | 同 |

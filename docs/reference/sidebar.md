@@ -1,11 +1,11 @@
 ---
 title: 目录与自动编号
-description: sidebar.mts 的编号规则、嵌套层级、折叠控制，以及常见的目录调整场景。
+description: sidebar.ts 的编号规则、嵌套层级、折叠控制，以及常见的目录调整场景。
 ---
 
 # 4.2 目录与自动编号
 
-整站目录由 `docs/.vitepress/sidebar.mts` 一个文件决定。这一节把规则讲清楚。
+整站目录由 `docs/.vitepress/sidebar.ts` 一个文件决定。这一节把规则讲清楚。
 
 ## 数据结构
 
@@ -183,8 +183,8 @@ sidebar: {
 
 ## 开发时的注意事项
 
-::: warning 改了 sidebar.mts 需要重启 dev server
-`sidebar.mts` 在**配置加载阶段**执行。VitePress 会监听配置文件变化并重启服务，但如果你发现目录没更新，手动重启一次 `pnpm dev` 就好。
+::: warning 改了 sidebar.ts 需要重启 dev server
+`sidebar.ts` 在**配置加载阶段**执行。VitePress 会监听配置文件变化并重启服务，但如果你发现目录没更新，手动重启一次 `pnpm dev` 就好。
 :::
 
 ::: tip 新增 Markdown 文件不会自动进目录

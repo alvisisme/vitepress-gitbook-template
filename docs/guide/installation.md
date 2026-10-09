@@ -11,7 +11,7 @@ description: Node.js 与 pnpm 的版本要求，以及安装、开发、构建�
 | --- | --- | --- | --- |
 | Node.js | 22.0.0 | 24.x LTS | VitePress 1.x 要求 Node 18+，本模板按 22+ 校验 |
 | pnpm | 9.0.0 | 10.x / 12.x | 也可用 npm / yarn，但锁文件与 Dockerfile 按 pnpm 编写 |
-| Git | 2.30+ | 最新版 | `lastUpdated` 功能依赖 git 历史 |
+| Git | 2.30+ | 最新版 | 只有 `lastUpdated` 需要；缺失时模板会自动关掉它 |
 
 ::: warning 注意
 `package.json` 里通过 `engines` 字段声明了版本要求。如果你的 Node 版本过低，安装时会直接报错，避免出现莫名其妙的构建失败。

@@ -22,7 +22,7 @@ description: 几个能省时间的部署经验。
 正文从这里开始。
 ```
 
-**第二步**：在 `docs/.vitepress/sidebar.mts` 的 `docTree` 里，把它插到想放的位置。
+**第二步**：在 `docs/.vitepress/sidebar.ts` 的 `docTree` 里，把它插到想放的位置。
 
 ```ts {5}
 {
