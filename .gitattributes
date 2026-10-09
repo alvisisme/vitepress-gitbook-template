@@ -1,0 +1,36 @@
+# 默认统一使用 LF，避免 Windows/macOS 协作时产生整文件 diff
+* text=auto eol=lf
+
+# 二进制文件不做换行转换
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.avif binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary
+*.pdf   binary
+
+# 文本文件强制 LF
+*.md    text eol=lf
+*.mdx   text eol=lf
+*.ts    text eol=lf
+*.mts   text eol=lf
+*.js    text eol=lf
+*.mjs   text eol=lf
+*.vue   text eol=lf
+*.json  text eol=lf
+*.css   text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+Dockerfile text eol=lf
+
+# 锁文件：合并时保留双方，交由 pnpm 重新解析
+pnpm-lock.yaml -diff merge=ours linguist-generated=true
+
+# 语言统计
+docs/**/*.md linguist-documentation

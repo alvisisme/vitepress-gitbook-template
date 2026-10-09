@@ -1,0 +1,19 @@
+# =============================================================================
+#  pnpm 配置
+#
+#  从 pnpm 11 起，pnpm 的配置项不再从 package.json 的 "pnpm" 字段读取，
+#  统一放在这个文件里；v11/v12 还把构建脚本相关的多个设置合并成了 allowBuilds。
+#
+#  文档：https://pnpm.io/settings
+#        https://pnpm.io/migration
+#
+#  ⚠️ Docker 构建时必须在 pnpm install 之前复制这个文件，否则设置不生效。
+# =============================================================================
+
+# 默认情况下 pnpm 会阻止依赖执行安装脚本（供应链安全）。
+# esbuild 需要它的安装脚本准备平台二进制，这里显式放行。
+#
+# 如果新增的依赖也提示 "Ignored build scripts"，把包名加到这里（值设为 true），
+# 或者执行 `pnpm approve-builds` 交互式选择；要显式禁止某个包则设为 false。
+allowBuilds:
+  esbuild: true

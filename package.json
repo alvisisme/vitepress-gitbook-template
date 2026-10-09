@@ -1,0 +1,40 @@
+{
+  "name": "vitepress-gitbook-template",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "GitBook 风格的 VitePress 静态文档站点模板：目录自动编号、代码高亮、Mermaid 流程图、KaTeX/MathJax 公式、Docker 构建与测试。",
+  "keywords": [
+    "vitepress",
+    "gitbook",
+    "documentation",
+    "template",
+    "mermaid",
+    "docker"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs",
+    "clean": "node scripts/clean.mjs",
+    "test": "node tests/smoke.mjs",
+    "verify": "pnpm run build && pnpm run test",
+    "docker:build": "docker build -t vitepress-gitbook-template:latest .",
+    "docker:test": "docker build --target test -t vitepress-gitbook-template:test .",
+    "docker:run": "docker run --rm -p 8080:80 vitepress-gitbook-template:latest",
+    "docker:verify": "bash scripts/docker-verify.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "markdown-it-mathjax3": "^4.3.2",
+    "mermaid": "^12.1.0",
+    "typescript": "^5.6.0",
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.13"
+  }
+}

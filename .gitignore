@@ -1,0 +1,39 @@
+# ---------- 依赖 ----------
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+
+# ---------- VitePress 产物 ----------
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+docs/.vitepress/.temp/
+
+# ---------- 构建 / 缓存 ----------
+dist/
+build/
+.cache/
+*.tsbuildinfo
+.eslintcache
+
+# ---------- 环境变量 ----------
+.env
+.env.local
+.env.*.local
+
+# ---------- 编辑器 / 系统 ----------
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# ---------- 日志 ----------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
