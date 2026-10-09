@@ -4,9 +4,10 @@ node_modules/
 .pnpm-debug.log*
 
 # ---------- VitePress 产物 ----------
-docs/.vitepress/dist/
-docs/.vitepress/cache/
-docs/.vitepress/.temp/
+# 用 ** 是为了同时覆盖 docs/.vitepress 与工作目录下意外产生的 .vitepress
+**/.vitepress/dist/
+**/.vitepress/cache/
+**/.vitepress/.temp/
 
 # ---------- 构建 / 缓存 ----------
 dist/
